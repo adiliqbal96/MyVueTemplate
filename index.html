@@ -1,28 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
   <head>
     <meta charset="UTF-8" />
-    <title>Vue Template</title>
-    <!-- Import Styles -->
+    <title>Eurovision 2025</title>
+    <!-- Bootstrap til styling -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/styles.css" />
-    <!-- Import Vue.js -->
+    <!-- Axios til HTTP-kald -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Vue.js -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   </head>
   <body>
-    <div id="app">
-      <div class="nav-bar"></div>
+    <div id="app" class="container mt-4">
 
-      <h1>{{ intro }}</h1>
-      
+      <!-- Sideoverskrift -->
+      <h1 class="mb-4 text-primary">{{ intro }}</h1>
+
+      <!-- Formular: Tilføj deltager -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <!-- addParticipant kaldes når formen submitter -->
+          <form @submit.prevent="addParticipant">
+            <div class="form-row">
+              <!-- Land -->
+              <div class="form-group col-md-3">
+                <label for="country">Land</label>
+                <input v-model="newCountry" id="country" class="form-control" placeholder="Land" required>
+              </div>
+              <!-- Artist -->
+              <div class="form-group col-md-3">
+                <label for="artist">Artist</label>
+                <input v-model="newArtist" id="artist" class="form-control" placeholder="Artist" required>
+              </div>
+              <!-- Sang -->
+              <div class="form-group col-md-3">
+                <label for="song">Sang</label>
+                <input v-model="newSong" id="song" class="form-control" placeholder="Sang" required>
+              </div>
+              <!-- Gruppe -->
+              <div class="form-group col-md-2">
+                <label for="group">Gruppe</label>
+                <input v-model="newGroup" id="group" class="form-control" placeholder="Gruppe" required>
+              </div>
+              <!-- Tilføj-knap -->
+              <div class="form-group col-md-1 d-flex align-items-end">
+                <button type="submit" class="btn btn-success w-100">Tilføj</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Filtrering og sortering -->
+      <div class="form-row mb-2">
+        <!-- Filtrér på land -->
+        <div class="col-6">
+          <!-- Når brugeren skriver, kaldes filterList -->
+          <input 
+            v-model="searchCountry" 
+            @input="filterList" 
+            class="form-control" 
+            placeholder="Filtrér på Land">
+        </div>
+        <!-- Sortér på land -->
+        <div class="col-6 d-flex justify-content-end">
+          <!-- Knappen kalder sortByCountry -->
+          <button 
+            class="btn btn-primary" 
+            @click="sortByCountry">
+            Sorter efter Land
+          </button>
+        </div>
+      </div>
+
+      <!-- Deltager-tabel -->
+      <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Land</th>
+            <th scope="col">Artist</th>
+            <th scope="col">Sang</th>
+            <th scope="col">Gruppe</th>
+            <th scope="col">Handling</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Vis alle deltagere i participants -->
+          <tr v-for="(participant, index) in participants" :key="participant.id">
+            <td>{{ index + 1 }}</td>
+            <td>{{ participant.country }}</td>
+            <td>{{ participant.artist }}</td>
+            <td>{{ participant.song }}</td>
+            <td>{{ participant.group }}</td>
+            <!-- Slet-knap, kalder deleteParticipant -->
+            <td>
+              <button 
+                class="btn btn-danger btn-sm" 
+                @click="deleteParticipant(participant.id)">
+                Slet
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <!-- Import App -->
+    <!-- Importér main.js med Vue-logik -->
     <script src="./js/main.js"></script>
-
-    <!-- Mount App -->
     <script>
-      const mountedApp = app.mount('#app')
+      // Mount Vue-app'en på #app
+      app.mount('#app')
     </script>
   </body>
 </html>
