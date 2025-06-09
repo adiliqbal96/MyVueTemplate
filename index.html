@@ -2,7 +2,7 @@
 <html lang="da">
   <head>
     <meta charset="UTF-8" />
-    <title>Eurovision 2025</title>
+    <title>Oscars 2025</title>
     <!-- Bootstrap til styling -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/styles.css" />
@@ -20,28 +20,28 @@
       <!-- Formular: Tilføj deltager -->
       <div class="card mb-4">
         <div class="card-body">
-          <!-- addParticipant kaldes når formen submitter -->
-          <form @submit.prevent="addParticipant">
+          <!-- addFilm kaldes når formen submitter -->
+          <form @submit.prevent="addFilm">
             <div class="form-row">
-              <!-- Land -->
+              <!-- Titel -->
               <div class="form-group col-md-3">
+                <label for="title">Titel</label>
+                <input v-model="newTitle" id="title" class="form-control" placeholder="Titel" required>
+              </div>
+              <!-- Director -->
+              <div class="form-group col-md-3">
+                <label for="director">Director</label>
+                <input v-model="newDirector" id="director" class="form-control" placeholder="Director" required>
+              </div>
+              <!-- Year -->
+              <div class="form-group col-md-3">
+                <label for="year">Year</label>
+                <input v-model="newYear" id="year" class="form-control" placeholder="Year" required>
+              </div>
+              <!-- Land -->
+              <div class="form-group col-md-2">
                 <label for="country">Land</label>
                 <input v-model="newCountry" id="country" class="form-control" placeholder="Land" required>
-              </div>
-              <!-- Artist -->
-              <div class="form-group col-md-3">
-                <label for="artist">Artist</label>
-                <input v-model="newArtist" id="artist" class="form-control" placeholder="Artist" required>
-              </div>
-              <!-- Sang -->
-              <div class="form-group col-md-3">
-                <label for="song">Sang</label>
-                <input v-model="newSong" id="song" class="form-control" placeholder="Sang" required>
-              </div>
-              <!-- Gruppe -->
-              <div class="form-group col-md-2">
-                <label for="group">Gruppe</label>
-                <input v-model="newGroup" id="group" class="form-control" placeholder="Gruppe" required>
               </div>
               <!-- Tilføj-knap -->
               <div class="form-group col-md-1 d-flex align-items-end">
@@ -79,26 +79,26 @@
         <thead class="thead-dark">
           <tr>
             <th scope="col">#</th>
+            <th scope="col">Titel</th>
+            <th scope="col">Director</th>
+            <th scope="col">Year</th>
             <th scope="col">Land</th>
-            <th scope="col">Artist</th>
-            <th scope="col">Sang</th>
-            <th scope="col">Gruppe</th>
             <th scope="col">Handling</th>
           </tr>
         </thead>
         <tbody>
-          <!-- Vis alle deltagere i participants -->
-          <tr v-for="(participant, index) in participants" :key="participant.id">
+          <!-- Vis alle film i film -->
+          <tr v-for="(filmItem, index) in film" :key="filmItem.id">
             <td>{{ index + 1 }}</td>
-            <td>{{ participant.country }}</td>
-            <td>{{ participant.artist }}</td>
-            <td>{{ participant.song }}</td>
-            <td>{{ participant.group }}</td>
-            <!-- Slet-knap, kalder deleteParticipant -->
+            <td>{{ filmItem.title }}</td>
+            <td>{{ filmItem.director }}</td>
+            <td>{{ filmItem.year }}</td>
+            <td>{{ filmItem.country }}</td>
+            <!-- Slet-knap, kalder deleteFilm -->
             <td>
               <button 
                 class="btn btn-danger btn-sm" 
-                @click="deleteParticipant(participant.id)">
+                @click="deleteFilm(filmItem.id)">
                 Slet
               </button>
             </td>

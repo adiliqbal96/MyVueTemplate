@@ -4,16 +4,17 @@ const app = Vue.createApp({
     data() {
         return {
             // Siderubrik
-            intro: 'Eurovision 2025 - Deltageroversigt',
+            intro: 'Oscars 2025 - Filmoversigt',
 
             // Liste af alle deltagere (hentes fra API)
-            participants: [],
+            film: [],
 
             // Formularfelter til ny deltager
-            newCountry: '',    // Land
-            newArtist: '',     // Artist
-            newSong: '',       // Sang
-            newGroup: '',      // Gruppe
+            newTitle: '',    // Title
+            newDirector: '',     // Director
+            newYear: '',       // Year
+            newCountry: '',      // Land
+            newAwards: '',       // Awards
 
             // Søgefelt for filtrering på land
             searchCountry: '',
@@ -22,12 +23,12 @@ const app = Vue.createApp({
             currentSort: '',
 
             // URL til API (tjek evt. portnummer)
-            apiUrl: 'https://localhost:7065/api/participants',
+            apiUrl: 'https://localhost:7176/api/films',
         }
     },
     methods: {
-        // Hent deltagere fra API (med evt. filter/sortering)
-        fetchParticipants() {
+        // Hent film fra API (med evt. filter/sortering)
+        fetchFilms() {
             let url = this.apiUrl + '?';
             // Tilføj sortering hvis valgt
             if (this.currentSort) url += `sort_by=${this.currentSort}&`;
@@ -36,46 +37,48 @@ const app = Vue.createApp({
             // Hent data fra API
             axios.get(url)
                 .then(response => {
-                    this.participants = response.data;
+                    this.film = response.data;
                 })
                 .catch(error => {
-                    alert('Fejl ved hentning af deltagere: ' + error);
+                    alert('Fejl ved hentning af film: ' + error);
                 });
         },
 
-        // Tilføj deltager via API
-        addParticipant() {
+        // Tilføj film via API
+        addFilm() {
             // Tjek at alle felter er udfyldt
-            if (!this.newCountry.trim() || !this.newArtist.trim() || !this.newSong.trim() || !this.newGroup.trim()) {
+            if (!this.newTitle.trim() || !this.newDirector.trim() || !this.newYear.trim() || !this.newCountry.trim() || !this.newAwards.trim()) {
                 alert("Alle felter skal udfyldes!");
                 return;
             }
             // Lav POST-request til API
             axios.post(this.apiUrl, {
+                title: this.newTitle,
+                director: this.newDirector,
+                year: this.newYear,
                 country: this.newCountry,
-                artist: this.newArtist,
-                song: this.newSong,
-                group: this.newGroup
+                awards: this.newAwards
             })
             .then(() => {
                 // Hent listen igen (så ny deltager vises)
-                this.fetchParticipants();
+                this.fetchFilms();
                 // Nulstil felter
+                this.newTitle = '';
+                this.newDirector = '';
+                this.newYear = '';
                 this.newCountry = '';
-                this.newArtist = '';
-                this.newSong = '';
-                this.newGroup = '';
+                this.newAwards = '';
             })
             .catch(error => {
-                alert('Fejl ved oprettelse af deltager: ' + (error.response?.data || error));
+                alert('Fejl ved oprettelse af film: ' + (error.response?.data || error));
             });
         },
 
-        // Slet deltager via API
-        deleteParticipant(id) {
+        // Slet film via API
+        deleteFilm(id) {
             axios.delete(`${this.apiUrl}/${id}`)
                 .then(() => {
-                    this.fetchParticipants();
+                    this.fetchFilms();
                 })
                 .catch(error => {
                     alert('Fejl ved sletning: ' + error);
@@ -85,17 +88,17 @@ const app = Vue.createApp({
         // Sortér listen alfabetisk efter Land
         sortByCountry() {
             this.currentSort = 'country';
-            this.fetchParticipants();
+            this.fetchFilms();
         },
 
         // Filtrér listen på Land (kaldes ved input)
         filterList() {
-            this.fetchParticipants();
+            this.fetchFilms();
         }
     },
 
     // Når appen starter, hentes listen første gang
     mounted() {
-        this.fetchParticipants();
+        this.fetchFilms();
     }
 });
